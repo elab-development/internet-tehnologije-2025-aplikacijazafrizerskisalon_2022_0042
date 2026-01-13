@@ -64,5 +64,47 @@ class ReservationController extends Controller
         return response()->json($slots);
     }
 
-    
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'hairdresser_id' => 'required|exists:users,id',
+            'service_id' => 'required|exists:services,id',
+            'start_time' => 'required|date|after:today',
+        ]);
+
+        $service = \App\Models\Service::find($request->service_id);
+
+        $startTime = \Carbon\Carbon::parse($request->start_time);
+        $endTime = $startTime->copy()->addMinutes($service->duration_minutes);
+
+        $reservation = \App\Models\Reservation::create([
+            'client_id' => auth()->id(),
+            'hairdresser_id' => $request->hairdresser_id,
+            'service_id' => $request->service_id,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'status' => 'pending',
+        ]);
+
+        return response()->json([
+            'message' => 'Termin uspešno zakazan!',
+            'reservation' => $reservation
+        ], 201);
+    }
+
+    public function index()
+    {
+        if (auth()->user()->is_admin) {
+            return Reservation::with(['client', 'hairdresser', 'service'])->get();
+        }
+
+        return Reservation::where('client_id', auth()->id())
+            ->with(['hairdresser', 'service'])
+            ->get();
+    }
+
+   
+
+
 }

@@ -10,10 +10,25 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $services = Service::query()->get();
+        $services = Service::with('category')->get();
 
         return response()->json([
             'data' => $services,
+        ]);
+    }
+
+    public function show($id)
+    {
+        $service = Service::with('category')->find($id);
+
+        if (!$service) {
+            return response()->json([
+                'message' => 'Usluga nije pronađena'
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => $service
         ]);
     }
 
@@ -24,7 +39,7 @@ class ServiceController extends Controller
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'duration_minutes' => ['required', 'integer', 'min:1'],
-            'type' => ['required', 'string', 'max:255'],
+            'category_id' => ['required', 'exists:categories,id'],
         ]);
 
         $service = Service::create($validated);
@@ -41,7 +56,7 @@ class ServiceController extends Controller
             'description' => ['nullable', 'string'],
             'price' => ['sometimes', 'required', 'numeric', 'min:0'],
             'duration_minutes' => ['sometimes', 'required', 'integer', 'min:1'],
-            'type' => ['sometimes', 'required', 'string', 'max:255'],
+            'category_id' => ['sometimes', 'required', 'exists:categories,id'],
         ]);
 
         $service->update($validated);

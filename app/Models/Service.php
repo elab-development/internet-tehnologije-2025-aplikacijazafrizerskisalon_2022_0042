@@ -11,7 +11,11 @@ class Service extends Model
         'description',
         'price',
         'duration_minutes',
-        'type'
+        'category_id'
     ];
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
 }
