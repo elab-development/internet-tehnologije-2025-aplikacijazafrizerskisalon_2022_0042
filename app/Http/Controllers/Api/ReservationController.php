@@ -95,16 +95,24 @@ class ReservationController extends Controller
 
     public function index()
     {
-        if (auth()->user()->is_admin) {
+        $user = auth()->user();
+
+        if ($user->is_admin) {
             return Reservation::with(['client', 'hairdresser', 'service'])->get();
         }
 
-        return Reservation::where('client_id', auth()->id())
+        if ($user->role === 'hairdresser') {
+            return Reservation::where('hairdresser_id', $user->id)
+                ->with(['client', 'service'])
+                ->get();
+        }
+
+        return Reservation::where('client_id', $user->id)
             ->with(['hairdresser', 'service'])
             ->get();
     }
 
-   
+
 
 
 }
