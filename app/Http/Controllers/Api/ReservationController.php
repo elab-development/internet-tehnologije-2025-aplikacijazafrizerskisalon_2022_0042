@@ -112,7 +112,18 @@ class ReservationController extends Controller
             ->get();
     }
 
+    public function cancel($id)
+    {
+        $reservation = Reservation::where('id', $id)
+            ->where('client_id', auth()->id())
+            ->first();
 
+        if (!$reservation) {
+            return response()->json(['message' => 'Rezervacija nije pronađena ili nemate dozvolu.'], 404);
+        }
 
+        $reservation->update(['status' => 'cancelled']);
 
+        return response()->json(['message' => 'Termin je uspešno otkazan.']);
+    }
 }

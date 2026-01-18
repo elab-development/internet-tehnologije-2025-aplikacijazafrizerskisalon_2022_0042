@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ReservationController;
+use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,7 +21,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/services', [ServiceController::class, 'store']);
     Route::put('/services/{service}', [ServiceController::class, 'update']);
     Route::delete('/services/{service}', [ServiceController::class, 'destroy']);
+
     Route::get('/reservations', [ReservationController::class, 'index']);
     Route::get('/reservations/{id}', [ReservationController::class, 'show']);
     Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']);
+    Route::put('/reservations/{id}/cancel', [ReservationController::class, 'cancel']);
+
+    Route::get('/schedules', [ScheduleController::class, 'index']);
+    Route::post('/schedules', [ScheduleController::class, 'store']);
+    Route::put('/schedules/{id}', [ScheduleController::class, 'update']);
+    Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy']);
+
 });
