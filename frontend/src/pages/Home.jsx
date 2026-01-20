@@ -1,5 +1,94 @@
+import heroImg from "../assets/salon.png";
+import Button from "../components/Button";
+import sisanjeMusko from "../assets/sisanje-musko.png";
+import sisanjeZensko from "../assets/sisanje-zensko.png";
+import farbanje from "../assets/farbanje.png";
+import brada from "../assets/brada.png";
+import ServiceCard from "../components/ServiceCard";
+
 function Home() {
-  return <div className="p-10 text-2xl text-[#F8F7F3]">POCETNA</div>;
+  const services = [
+    {
+      id: 1,
+      icon: sisanjeMusko,
+      title: "MUŠKO ŠIŠANJE",
+      desc: "Pranje, šišanje i stilizovanje",
+    },
+    {
+      id: 2,
+      icon: sisanjeZensko,
+      title: "ŽENSKO ŠIŠANJE",
+      desc: "Konsultacije, pranje i feniranje.",
+    },
+    {
+      id: 3,
+      icon: farbanje,
+      title: "FARBANJE I PRAMENOVI",
+      desc: "Premium boje i nega.",
+    },
+    {
+      id: 4,
+      icon: brada,
+      title: "BRADA I STILIZOVANJE",
+      desc: "Oblikovanje, brijanje i tretman.",
+    },
+  ];
+  return (
+    <div className="font-montserrat overflow-x-hidden bg-[#F5F2E9]">
+      <div className="relative h-screen md:h-[90vh] flex justify-center items-center text-center text-[#F8F7F3]">
+        <div className="absolute inset-0 z-0">
+          <img src={heroImg} className="w-full h-full object-cover"></img>
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
+        <div className="relative z-1 ">
+          <h1 className="font-cormorant italic uppercase text-4xl md:text-7xl pb-3 tracking-wider">
+            Budite najbolja <br />
+            verzija sebe
+          </h1>
+          <p className="font-montserrat mb-3 text-sm md:text-base max-w-60 md:max-w-none mx-auto">
+            Profesionalno šišanje i stilizovanje za žene i muškarce.
+          </p>
+          <Button
+            variant="primary"
+            text="ZAKAZI TERMIN"
+            className="text-[10px] md:text-sm"
+          ></Button>
+        </div>
+      </div>
+
+      <div className="text-[#705B46]  text-center justify-center items-center px-10 py-20 md:p-20">
+        <h1 className="font-cormorant uppercase text-3xl md:text-4xl pb-3 tracking-wider">
+          Vaša kosa, naša inspiracija
+        </h1>
+        <p className="font-montserrat text-sm md:text-base">
+          Naša priča počela je iz jednostavne strasti prema lepoti i želje da
+          svakom klijentu pružimo više od običnog šišanja. U srcu našeg rada je
+          uverenje da kosa nije samo ukras, već izraz vaše ličnosti. Naš tim
+          čine stručnjaci posvećeni neprestanom usavršavanju i najnovijim
+          svetskim trendovima. Koristimo isključivo vrhunske preparate koji
+          neguju vašu kosu od korena do krajeva. Zakoračite u naš mali kutak
+          estetike, gde se pažljivo slušaju vaše želje, a svaki detalj kreira s
+          ljubavlju.
+        </p>
+      </div>
+
+      <div className="bg-[#EBE5D7] mx-10 md:mx-20 rounded-2xl p-10 text-[#705B46] text-center">
+        <h2 className="font-cormorant uppercase text-3xl md:text-4xl pb-3 tracking-wider mb-8 md:mb-12 ">
+          Naše najtrazenije usluge
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-4">
+          {services.map((service) => (
+            <ServiceCard
+              key={service.id}
+              iconSrc={service.icon}
+              title={service.title}
+              description={service.desc}
+            ></ServiceCard>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Home;

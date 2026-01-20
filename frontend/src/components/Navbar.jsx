@@ -3,7 +3,7 @@ import Button from "./Button";
 
 function Navbar() {
   return (
-    <nav className="bg-[#705B46] shadow-sm justify-between items-center flex w-full px-4 py-2">
+    <nav className="bg-[#705B46] shadow-sm justify-between items-center flex w-full px-4 py-2 box-border overflow-hidden">
       <h1 className="font-cormorant tracking-widest text-2xl text-[#F8F7F3]">
         NURO
       </h1>
