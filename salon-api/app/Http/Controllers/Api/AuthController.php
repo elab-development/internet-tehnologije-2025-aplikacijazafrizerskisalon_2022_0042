@@ -62,4 +62,9 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Uspešno ste se odjavili']);
     }
+
+    public function getHairdressers()
+    {
+        return User::where('role', 'hairdresser')->get();
+    }
 }

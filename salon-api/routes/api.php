@@ -11,6 +11,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/services', [ServiceController::class, 'index']);
 Route::get('/services/{id}', [ServiceController::class, 'show']);
 Route::get('/available-slots', [ReservationController::class, 'getAvailableSlots']);
+Route::get('/hairdressers', [AuthController::class, 'getHairdressers']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
