@@ -1,6 +1,6 @@
 function Button({
   text,
-  onCLick,
+  onClick,
   variant = "primary",
   type = "button",
   className = "",
@@ -11,12 +11,12 @@ function Button({
   };
 
   const style =
-    "px-6 py-2 rounded-lg font-medium transition-all duration-300 shadow-sm";
+    "px-6 py-2 rounded-lg font-medium transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 active:scale-95 cursor-pointer";
 
   return (
     <button
       type={type}
-      onCLick={onCLick}
+      onCLick={onClick}
       className={`${style} ${variants[variant]} ${className}`}
     >{text}</button>
   );
