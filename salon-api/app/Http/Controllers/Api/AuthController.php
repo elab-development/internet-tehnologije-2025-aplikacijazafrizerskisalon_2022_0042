@@ -54,6 +54,7 @@ class AuthController extends Controller
             'message' => 'Zdravo ' . $user->first_name,
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'user' => $user,
         ]);
     }
 

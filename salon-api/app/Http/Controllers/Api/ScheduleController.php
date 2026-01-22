@@ -15,19 +15,18 @@ class ScheduleController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'day_of_week' => 'required|string',
-            'start_time' => 'required',
-            'end_time' => 'required',
-        ]);
+        $schedule = Schedule::updateOrCreate(
+            [
+                'user_id' => $request->user_id,
+                'day_of_week' => $request->day_of_week
+            ],
+            [
+                'start_time' => $request->start_time,
+                'end_time' => $request->end_time
+            ]
+        );
 
-        $schedule = Schedule::create($request->all());
-
-        return response()->json([
-            'message' => 'Radno vreme uspešno dodato!',
-            'schedule' => $schedule
-        ], 201);
+        return response()->json(['message' => 'Raspored ažuriran!', 'schedule' => $schedule]);
     }
 
     public function destroy($id)
