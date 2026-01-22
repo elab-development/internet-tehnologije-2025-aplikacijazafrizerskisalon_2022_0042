@@ -9,6 +9,7 @@ import ReviewCard from "../components/ReviewCard";
 import avatar1 from "../assets/avatar1.png";
 import avatar2 from "../assets/avatar2.png";
 import avatar3 from "../assets/avatar3.png";
+import { Link } from "react-router-dom";
 
 function Home() {
   const services = [
@@ -113,11 +114,13 @@ function Home() {
         </div>
       </div>
       <div className="flex justify-center items-center pt-10">
-        <Button
-          text="VIDI SVE USLUGE"
-          variant="secondary"
-          className="text-[12px] md:text-sm"
-        ></Button>
+        <Link to="/services">
+          <Button
+            text="VIDI SVE USLUGE"
+            variant="secondary"
+            className="text-[12px] md:text-sm"
+          ></Button>
+        </Link>
       </div>
       <div className="text-center p-10">
         <h2 className=" text-[#705B46] font-cormorant uppercase text-3xl md:text-4xl pb-3 tracking-wider mb-8 md:mb-12 ">

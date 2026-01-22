@@ -16,7 +16,7 @@ function Button({
   return (
     <button
       type={type}
-      onCLick={onClick}
+      onClick={onClick}
       className={`${style} ${variants[variant]} ${className}`}
     >{text}</button>
   );
