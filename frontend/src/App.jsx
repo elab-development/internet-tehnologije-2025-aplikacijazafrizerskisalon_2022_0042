@@ -17,6 +17,7 @@ import AdminHairdressers from "./pages/AdminHairdressers";
 import AdminSchedules from "./pages/AdminSchedules";
 import Register from "./pages/Register";
 import MyReservations from "./pages/MyReservations";
+import AdminReservations from "./pages/AdminReservations";
 
 function AppContent() {
   const location = useLocation();
@@ -47,6 +48,16 @@ function AppContent() {
           element={
             token && (userRole === "admin" || userRole === "hairdresser") ? (
               <AdminDashboard />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/admin/reservations"
+          element={
+            token && (userRole === "admin" || userRole === "hairdresser") ? (
+              <AdminReservations />
             ) : (
               <Navigate to="/login" />
             )

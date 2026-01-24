@@ -84,7 +84,7 @@ function MyReservations() {
 
                   <div className="flex items-center gap-2 text-gray-500 text-xs uppercase tracking-widest">
                     <User size={14} />
-                    <span>Stilista: {res.hairdresser?.first_name}</span>
+                    <span>Stilista: {res.hairdresser?.first_name} {res.hairdresser?.last_name}</span>
                   </div>
                 </div>
 

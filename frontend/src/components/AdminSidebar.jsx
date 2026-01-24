@@ -28,7 +28,7 @@ function AdminSidebar() {
         </Link>
         <Link
           title="Rezervacije"
-          to="/admin/services"
+          to="/admin/reservations"
           className="hover:translate-x-2 transition-transform py-2 border-b border-transparent hover:border-[#F8F7F3]/30"
         >
           REZERVACIJE
