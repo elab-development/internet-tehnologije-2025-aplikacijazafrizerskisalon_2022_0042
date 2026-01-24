@@ -1,11 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
   const toggleMenu = () => setIsOpen(!isOpen);
+  const token = localStorage.getItem("token");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_role");
+    setIsOpen(false);
+    navigate("/login");
+  };
 
   return (
     <nav className="bg-[#705B46] shadow-sm justify-between items-center flex w-full px-4 py-2 box-border overflow-hidden">
@@ -19,15 +28,32 @@ function Navbar() {
         <Link to="/services" className="hover:text-[#E8E7E3] transition-colors">
           Usluge
         </Link>
-        <Link
-          to="/reservation"
-          className="hover:text-[#E8E7E3] transition-colors"
-        >
-          Rezervacije
-        </Link>
-        <Link to="/login" className="hover:text-[#E8E7E3] transition-colors">
-          Prijavi se
-        </Link>
+        {token ? (
+          <>
+            <Link
+              to="/reservation"
+              className="hover:text-[#E8E7E3] transition-colors"
+            >
+              Rezervisi
+            </Link>
+            <Link
+              to="/my-reservations"
+              className="hover:text-[#E8E7E3] transition-colors"
+            >
+              Moje rezervacije
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="hover:text-[#E8E7E3] transition-colors uppercase cursor-pointer"
+            >
+              Odjavi se
+            </button>
+          </>
+        ) : (
+          <Link to="/login" className="hover:text-[#E8E7E3] transition-colors">
+            Prijavi se
+          </Link>
+        )}
       </div>
 
       <button onClick={toggleMenu} className="md:hidden text-[#F8F7F3] z-110">
@@ -61,13 +87,31 @@ function Navbar() {
           >
             Rezervacije
           </Link>
-          <Link
-            to="/login"
-            onClick={toggleMenu}
-            className="text-[#F8F7F3] text-2xl font-cormorant tracking-widest uppercase"
-          >
-            Prijavi se
-          </Link>
+          {token ? (
+            <>
+              <Link
+                to="/reservation"
+                onClick={toggleMenu}
+                className="text-[#F8F7F3] text-2xl font-cormorant tracking-widest uppercase"
+              >
+                Rezervacije
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="text-[#F8F7F3] text-2xl font-cormorant tracking-widest uppercase cursor-pointer"
+              >
+                Odjavi se
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              onClick={toggleMenu}
+              className="text-[#F8F7F3] text-2xl font-cormorant tracking-widest uppercase"
+            >
+              Prijavi se
+            </Link>
+          )}
         </div>
       </div>
     </nav>

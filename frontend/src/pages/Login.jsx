@@ -1,8 +1,8 @@
 import { useState } from "react";
 import heroImg from "../assets/salon.png";
 import Button from "../components/Button";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../axios";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -13,7 +13,7 @@ function Login() {
     console.log("Kliknuto na dugme!");
     if (e) e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/api/login", {
+      const response = await api.post("/login", {
         email: email,
         password: password,
       });
@@ -23,12 +23,12 @@ function Login() {
       const token = response.data.access_token;
       const user = response.data.user;
 
+      localStorage.setItem("token", token);
+      localStorage.setItem("user_role", user.role);
+
       if (user.role === "admin" || user.role === "hairdresser") {
-        localStorage.setItem("token", token);
-        localStorage.setItem("user_role", user.role);
         navigate("/admin");
       } else {
-        alert("Nemate administratorska prava za pristup.");
         navigate("/");
       }
     } catch (error) {
@@ -49,7 +49,7 @@ function Login() {
         <h1 className="font-cormorant uppercase text-3xl md:text-4xl pb-10 tracking-wider">
           Prijava korisnika
         </h1>
-        <div className=" flex flex-col gap-5">
+        <form onSubmit={handleLogin} className="flex flex-col gap-6">
           <input
             type="email"
             placeholder="Email"
@@ -69,8 +69,19 @@ function Login() {
             text="PRIJAVI SE"
             variant="secondary"
             className="text-[12px] md:text-sm"
-            onClick={handleLogin}
+            type="submit"
           ></Button>
+        </form>
+        <div className="mt-10 pt-6 border-t border-[#705B46]/10">
+          <p className="font-montserrat text-[10px] tracking-[0.2em] text-[#705B46]/60">
+            NEMATE PROFIL?
+          </p>
+          <Link
+            to="/register"
+            className="inline-block mt-2 font-montserrat text-[11px] font-bold tracking-[0.3em] text-[#705B46] hover:text-[#5D4B3A] transition-colors border-b border-[#705B46]"
+          >
+            KREIRAJTE NALOG
+          </Link>
         </div>
       </div>
     </div>
