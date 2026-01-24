@@ -24,7 +24,6 @@ class ReservationController extends Controller
 
         $schedule = Schedule::where('user_id', $request->hairdresser_id)
             ->where('day_of_week', $dayName)
-            ->where('is_active', true)
             ->first();
 
         if (!$schedule) {
@@ -97,7 +96,7 @@ class ReservationController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->is_admin) {
+        if ($user->role === "admin") {
             return Reservation::with(['client', 'hairdresser', 'service'])->get();
         }
 
@@ -125,5 +124,22 @@ class ReservationController extends Controller
         $reservation->update(['status' => 'cancelled']);
 
         return response()->json(['message' => 'Termin je uspešno otkazan.']);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        $request->validate([
+            'status' => 'required|in:pending,confirmed,completed,cancelled,no_show',
+        ]);
+
+        $reservation->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json([
+            'message' => 'Status rezervacije uspešno ažuriran!',
+            'reservation' => $reservation->load(['client', 'hairdresser', 'service'])
+        ]);
     }
 }

@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reservations/{id}', [ReservationController::class, 'show']);
     Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']);
     Route::put('/reservations/{id}/cancel', [ReservationController::class, 'cancel']);
+    Route::put('/reservations/{id}', [ReservationController::class, 'update']);
 
     Route::post('/hairdressers', [UserController::class, 'store']);
     Route::get('/hairdressers', [UserController::class, 'getHairdressers']);
