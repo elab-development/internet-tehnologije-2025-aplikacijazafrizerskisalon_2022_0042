@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../axios";
 import Button from "../components/Button";
+import Swal from "sweetalert2";
 function Reservation() {
   const [step, setStep] = useState(1);
   const [services, setServices] = useState([]);
@@ -45,10 +46,29 @@ function Reservation() {
     try {
       const startTime = `${booking.date} ${booking.start_time}`;
       await api.post("/reservations", { ...booking, start_time: startTime });
-      alert("Uspešno ste rezervisali termin!");
+      Swal.fire({
+        title: "USPEŠNO!",
+        text: "Vaš termin je rezervisan. Vidimo se!",
+        icon: "success",
+        confirmButtonColor: "#705B46",
+        borderRadius: "20px",
+        fontFamily: "Cormorant Garamond",
+      });
+
       setStep(1);
+      setBooking({
+        service_id: "",
+        hairdresser_id: "",
+        date: "",
+        start_time: "",
+      });
     } catch (error) {
-      alert("Greška pri zakazivanju.");
+      Swal.fire({
+        title: "GREŠKA",
+        text: "Došlo je do problema pri zakazivanju. Molimo pokušajte ponovo.",
+        icon: "error",
+        confirmButtonColor: "#705B46",
+      });
       console.log(error.error);
     }
   };
@@ -115,6 +135,9 @@ function Reservation() {
                 <h3 className="text-[#705B46] text-sm font-bold uppercase tracking-wider">
                   {h.first_name} {h.last_name}
                 </h3>
+                <p className="text-gray-400 text-sm text-[10px] italic tracking-widest">
+                  {h.specialization}
+                </p>
               </div>
             ))}
             <button

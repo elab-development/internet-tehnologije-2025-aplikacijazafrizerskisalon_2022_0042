@@ -61,7 +61,7 @@ function Home() {
   ];
   return (
     <div className="font-montserrat overflow-x-hidden bg-[#F5F2E9]">
-      <div className="relative h-screen md:h-[90vh] flex justify-center items-center text-center text-[#F8F7F3]">
+      <div className="relative h-screen md:h-[95vh] flex justify-center items-center text-center text-[#F8F7F3]">
         <div className="absolute inset-0 z-0">
           <img src={heroImg} className="w-full h-full object-cover"></img>
           <div className="absolute inset-0 bg-black/40"></div>

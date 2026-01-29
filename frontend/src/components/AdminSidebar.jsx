@@ -47,6 +47,13 @@ function AdminSidebar() {
         >
           RASPORED ZAPOSLENIH
         </Link>
+        <Link
+          title="Klijenti"
+          to="/admin/clients"
+          className="hover:translate-x-2 transition-transform py-2 border-b border-transparent hover:border-[#F8F7F3]/30"
+        >
+          KLIJENTI
+        </Link>
         <Button
           onClick={handleLogout}
           variant="primary"

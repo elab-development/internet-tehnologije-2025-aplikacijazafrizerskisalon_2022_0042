@@ -21,18 +21,10 @@ function AdminReservations() {
     fetchReservations();
   }, []);
 
-  const handleStatusChange = async (id, newStatus) => {
-    try {
-      await api.put(`/reservations/${id}`, { status: newStatus });
-      fetchReservations();
-    } catch (error) {
-      console.error("Greška pri izmeni statusa:", error);
-      alert("Nije uspelo ažuriranje statusa.");
-    }
-  };
+  
 
   return (
-    <div className="min-h-screen bg-[#F8F7F3] p-8 pt-24">
+    <div className="min-h-screen bg-[#F8F7F3] p-8 pt-24 pl-72">
       <AdminSidebar />
       <div className="max-w-6xl mx-auto">
         <h1 className="font-cormorant text-3xl text-[#705B46] mb-8 uppercase tracking-widest">
@@ -47,7 +39,6 @@ function AdminReservations() {
                 <th className="p-4">Klijent</th>
                 <th className="p-4">Usluga / Frizer</th>
                 <th className="p-4">Status</th>
-                <th className="p-4 text-center">Akcije</th>
               </tr>
             </thead>
             <tbody className="text-sm">
@@ -94,42 +85,7 @@ function AdminReservations() {
                       {res.status}
                     </span>
                   </td>
-                  <td className="p-4">
-                    <div className="flex justify-center gap-2">
-                      {res.status === "pending" && (
-                        <button
-                          className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
-                          title="Potvrdi"
-                          onClick={() =>
-                            handleStatusChange(res.id, "confirmed")
-                          }
-                        >
-                          <Check size={14} />
-                        </button>
-                      )}
-                      {res.status !== "cancelled" && (
-                        <button
-                          className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-                          title="Otkaži"
-                          onClick={() =>
-                            handleStatusChange(res.id, "cancelled")
-                          }
-                        >
-                          <X size={14} />
-                        </button>
-                      )}
-                      {res.status === "confirmed" && (
-                        <button
-                          onClick={() =>
-                            handleStatusChange(res.id, "completed")
-                          }
-                          className="text-[10px] font-bold text-[#705B46] hover:underline"
-                        >
-                          ZAVRŠENO
-                        </button>
-                      )}
-                    </div>
-                  </td>
+              
                 </tr>
               ))}
             </tbody>

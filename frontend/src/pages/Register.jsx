@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../axios";
 import heroImg from "../assets/salon.png";
 import Button from "../components/Button";
+import Swal from "sweetalert2";
 function Register() {
   const [formData, setFormData] = useState({
     first_name: "",
@@ -19,10 +20,22 @@ function Register() {
     e.preventDefault();
     try {
       await api.post("/register", formData);
-      alert("Uspesna registracija! Sada se mozete ulogovati.");
+      Swal.fire({
+        title: "USPEŠNO!",
+        text: "Uspešno ste se registrovali! Sada se možete prijaviti.",
+        icon: "success",
+        confirmButtonColor: "#705B46",
+        borderRadius: "20px",
+        fontFamily: "Cormorant Garamond",
+      });
       navigate("/login");
     } catch (error) {
-      alert("Greška pri registraciji. Proverite podatke.");
+      Swal.fire({
+              title: "GREŠKA",
+              text: "Greška pri registraciji. Pokušajte ponovo!",
+              icon: "error",
+              confirmButtonColor: "#705B46",
+            });
       console.log(error.error);
     }
   };
@@ -76,8 +89,7 @@ function Register() {
             onChange={(e) =>
               setFormData({ ...formData, phone: e.target.value })
             }
-          >
-          </input>
+          ></input>
           <input
             type="password"
             placeholder="Password"

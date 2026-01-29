@@ -3,6 +3,7 @@ import heroImg from "../assets/salon.png";
 import Button from "../components/Button";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../axios";
+import Swal from "sweetalert2";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -25,15 +26,21 @@ function Login() {
 
       localStorage.setItem("token", token);
       localStorage.setItem("user_role", user.role);
-
-      if (user.role === "admin" || user.role === "hairdresser") {
+      if (user.role === "hairdresser") {
+        navigate("/hairdresser/schedule");
+      } else if (user.role === "admin") {
         navigate("/admin");
       } else {
         navigate("/");
       }
     } catch (error) {
       console.error("Greška:", error);
-      alert("Pogrešni podaci za prijavu.");
+      Swal.fire({
+        title: "GREŠKA",
+        text: "Pogrešni podaci za prijavu!",
+        icon: "error",
+        confirmButtonColor: "#705B46",
+      });
     }
   };
 
