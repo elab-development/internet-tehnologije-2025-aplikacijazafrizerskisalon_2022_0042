@@ -126,20 +126,27 @@ class ReservationController extends Controller
         return response()->json(['message' => 'Termin je uspešno otkazan.']);
     }
 
-    public function update(Request $request, $id)
-    {
-        $reservation = Reservation::findOrFail($id);
-        $request->validate([
-            'status' => 'required|in:pending,confirmed,completed,cancelled,no_show',
-        ]);
+   public function update(Request $request, $id)
+{
+    $reservation = Reservation::findOrFail($id);
+    $user = auth()->user();
 
-        $reservation->update([
-            'status' => $request->status
-        ]);
+    $isAdmin = $user->role === 'admin';
+    $isOwnerHairdresser = ($user->role === 'hairdresser' && $reservation->hairdresser_id === $user->id);
 
-        return response()->json([
-            'message' => 'Status rezervacije uspešno ažuriran!',
-            'reservation' => $reservation->load(['client', 'hairdresser', 'service'])
-        ]);
+    if (!$isAdmin && !$isOwnerHairdresser) {
+        return response()->json(['message' => 'Nemate dozvolu da menjate ovaj termin.'], 403);
     }
+
+    $request->validate([
+        'status' => 'required|in:pending,confirmed,completed,cancelled,no_show',
+    ]);
+
+    $reservation->update(['status' => $request->status]);
+
+    return response()->json([
+        'message' => 'Status uspešno ažuriran!',
+        'reservation' => $reservation->load(['client', 'service', 'hairdresser'])
+    ]);
+}
 }

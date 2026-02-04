@@ -39,4 +39,15 @@ class ScheduleController extends Controller
         $schedule->delete();
         return response()->json(['message' => 'Radno vreme obrisano']);
     }
+
+    public function mySchedule()
+    {
+        $userId = auth()->id();
+
+        $schedule = Schedule::where('user_id', $userId)
+            ->orderByRaw("FIELD(day_of_week, 'Ponedeljak', 'Utorak', 'Sreda', 'Četvrtak', 'Petak', 'Subota', 'Nedelja')")
+            ->get();
+
+        return response()->json($schedule);
+    }
 }
