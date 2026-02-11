@@ -45,7 +45,7 @@ class ScheduleController extends Controller
         $userId = auth()->id();
 
         $schedule = Schedule::where('user_id', $userId)
-            ->orderByRaw("FIELD(day_of_week, 'Ponedeljak', 'Utorak', 'Sreda', 'Četvrtak', 'Petak', 'Subota', 'Nedelja')")
+            ->orderByRaw("FIELD(day_of_week, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')")
             ->get();
 
         return response()->json($schedule);

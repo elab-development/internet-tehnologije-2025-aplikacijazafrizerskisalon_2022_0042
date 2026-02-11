@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ReservationConfirmed;
 use App\Models\Reservation;
 use App\Models\Schedule;
 use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ReservationController extends Controller
 {
@@ -86,6 +88,13 @@ class ReservationController extends Controller
             'status' => 'pending',
         ]);
 
+        try {
+            if ($request->user() && $request->user()->email) {
+                Mail::to($request->user()->email)->send(new ReservationConfirmed($reservation));
+            }
+        } catch (\Exception $e) {
+            \Log::error("Greška kod mejla: " . $e->getMessage());
+        }
         return response()->json([
             'message' => 'Termin uspešno zakazan!',
             'reservation' => $reservation
@@ -126,27 +135,27 @@ class ReservationController extends Controller
         return response()->json(['message' => 'Termin je uspešno otkazan.']);
     }
 
-   public function update(Request $request, $id)
-{
-    $reservation = Reservation::findOrFail($id);
-    $user = auth()->user();
+    public function update(Request $request, $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        $user = auth()->user();
 
-    $isAdmin = $user->role === 'admin';
-    $isOwnerHairdresser = ($user->role === 'hairdresser' && $reservation->hairdresser_id === $user->id);
+        $isAdmin = $user->role === 'admin';
+        $isOwnerHairdresser = ($user->role === 'hairdresser' && $reservation->hairdresser_id === $user->id);
 
-    if (!$isAdmin && !$isOwnerHairdresser) {
-        return response()->json(['message' => 'Nemate dozvolu da menjate ovaj termin.'], 403);
+        if (!$isAdmin && !$isOwnerHairdresser) {
+            return response()->json(['message' => 'Nemate dozvolu da menjate ovaj termin.'], 403);
+        }
+
+        $request->validate([
+            'status' => 'required|in:pending,confirmed,completed,cancelled,no_show',
+        ]);
+
+        $reservation->update(['status' => $request->status]);
+
+        return response()->json([
+            'message' => 'Status uspešno ažuriran!',
+            'reservation' => $reservation->load(['client', 'service', 'hairdresser'])
+        ]);
     }
-
-    $request->validate([
-        'status' => 'required|in:pending,confirmed,completed,cancelled,no_show',
-    ]);
-
-    $reservation->update(['status' => $request->status]);
-
-    return response()->json([
-        'message' => 'Status uspešno ažuriran!',
-        'reservation' => $reservation->load(['client', 'service', 'hairdresser'])
-    ]);
-}
 }
