@@ -13,6 +13,19 @@ use Illuminate\Support\Facades\Mail;
 
 class ReservationController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/available-slots",
+     *     summary="Dostupni termini frizera",
+     *     tags={"Rezervacije"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="hairdresser_id", in="query", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="service_id", in="query", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="date", in="query", required=true, @OA\Schema(type="string", example="2026-03-10")),
+     *     @OA\Response(response=200, description="Lista slobodnih termina"),
+     *     @OA\Response(response=404, description="Frizer ne radi taj dan")
+     * )
+     */
     public function getAvailableSlots(Request $request)
     {
         $request->validate([
@@ -65,7 +78,25 @@ class ReservationController extends Controller
         return response()->json($slots);
     }
 
-
+    /**
+     * @OA\Post(
+     *     path="/api/reservations",
+     *     summary="Kreiranje nove rezervacije",
+     *     tags={"Rezervacije"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"hairdresser_id","service_id","start_time"},
+     *             @OA\Property(property="hairdresser_id", type="integer", example=2),
+     *             @OA\Property(property="service_id", type="integer", example=1),
+     *             @OA\Property(property="start_time", type="string", example="2026-03-10 10:00:00")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Rezervacija kreirana"),
+     *     @OA\Response(response=422, description="Greška validacije")
+     * )
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -75,7 +106,6 @@ class ReservationController extends Controller
         ]);
 
         $service = \App\Models\Service::find($request->service_id);
-
         $startTime = \Carbon\Carbon::parse($request->start_time);
         $endTime = $startTime->copy()->addMinutes($service->duration_minutes);
 
@@ -95,12 +125,22 @@ class ReservationController extends Controller
         } catch (\Exception $e) {
             \Log::error("Greška kod mejla: " . $e->getMessage());
         }
+
         return response()->json([
             'message' => 'Termin uspešno zakazan!',
             'reservation' => $reservation
         ], 201);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/reservations",
+     *     summary="Lista svih rezervacija",
+     *     tags={"Rezervacije"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="Lista rezervacija")
+     * )
+     */
     public function index()
     {
         $user = auth()->user();
@@ -120,6 +160,33 @@ class ReservationController extends Controller
             ->get();
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/reservations/{id}",
+     *     summary="Detalji rezervacije",
+     *     tags={"Rezervacije"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Detalji rezervacije"),
+     *     @OA\Response(response=404, description="Nije pronađena")
+     * )
+     */
+    public function show($id)
+    {
+        return Reservation::with(['client', 'hairdresser', 'service'])->findOrFail($id);
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/api/reservations/{id}/cancel",
+     *     summary="Otkazivanje rezervacije",
+     *     tags={"Rezervacije"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Rezervacija otkazana"),
+     *     @OA\Response(response=404, description="Nije pronađena")
+     * )
+     */
     public function cancel($id)
     {
         $reservation = Reservation::where('id', $id)
@@ -131,10 +198,27 @@ class ReservationController extends Controller
         }
 
         $reservation->update(['status' => 'cancelled']);
-
         return response()->json(['message' => 'Termin je uspešno otkazan.']);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/reservations/{id}",
+     *     summary="Ažuriranje statusa rezervacije",
+     *     tags={"Rezervacije"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"status"},
+     *             @OA\Property(property="status", type="string", example="confirmed")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Status ažuriran"),
+     *     @OA\Response(response=403, description="Nemate dozvolu")
+     * )
+     */
     public function update(Request $request, $id)
     {
         $reservation = Reservation::findOrFail($id);
@@ -157,5 +241,23 @@ class ReservationController extends Controller
             'message' => 'Status uspešno ažuriran!',
             'reservation' => $reservation->load(['client', 'service', 'hairdresser'])
         ]);
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/reservations/{id}",
+     *     summary="Brisanje rezervacije",
+     *     tags={"Rezervacije"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Rezervacija obrisana"),
+     *     @OA\Response(response=404, description="Nije pronađena")
+     * )
+     */
+    public function destroy($id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        $reservation->delete();
+        return response()->json(['message' => 'Rezervacija obrisana.']);
     }
 }

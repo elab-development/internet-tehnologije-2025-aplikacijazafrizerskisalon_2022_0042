@@ -1,0 +1,974 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Salon API",
+        "description": "API za upravljanje frizerskim salonom",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api": {},
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registracija novog korisnika",
+                "operationId": "8e4e3cb7b46126f4696379d3c7eeb4ad",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "first_name",
+                                    "last_name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Marija"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Petrovic"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "marija@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Korisnik kreiran"
+                    },
+                    "422": {
+                        "description": "Greška validacije"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Prijava korisnika",
+                "operationId": "222b2625838e3c57e017987f73598fda",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "marija@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Uspešna prijava"
+                    },
+                    "401": {
+                        "description": "Pogrešni podaci"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Odjava korisnika",
+                "operationId": "ad65cbbd4e9f201619eae184a5961a98",
+                "responses": {
+                    "200": {
+                        "description": "Uspešna odjava"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/available-slots": {
+            "get": {
+                "tags": [
+                    "Rezervacije"
+                ],
+                "summary": "Dostupni termini frizera",
+                "operationId": "5eaf84c5da590299e23852bb6319499a",
+                "parameters": [
+                    {
+                        "name": "hairdresser_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "service_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "2026-03-10"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista slobodnih termina"
+                    },
+                    "404": {
+                        "description": "Frizer ne radi taj dan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reservations": {
+            "get": {
+                "tags": [
+                    "Rezervacije"
+                ],
+                "summary": "Lista svih rezervacija",
+                "operationId": "f10e68ff0ce263ef754b2f640eda8d93",
+                "responses": {
+                    "200": {
+                        "description": "Lista rezervacija"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Rezervacije"
+                ],
+                "summary": "Kreiranje nove rezervacije",
+                "operationId": "4f59911f11563f79b4f01bd02222607d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "hairdresser_id",
+                                    "service_id",
+                                    "start_time"
+                                ],
+                                "properties": {
+                                    "hairdresser_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "service_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "start_time": {
+                                        "type": "string",
+                                        "example": "2026-03-10 10:00:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Rezervacija kreirana"
+                    },
+                    "422": {
+                        "description": "Greška validacije"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reservations/{id}": {
+            "get": {
+                "tags": [
+                    "Rezervacije"
+                ],
+                "summary": "Detalji rezervacije",
+                "operationId": "14c077250033bb10a7305f9724f10bd4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalji rezervacije"
+                    },
+                    "404": {
+                        "description": "Nije pronađena"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Rezervacije"
+                ],
+                "summary": "Ažuriranje statusa rezervacije",
+                "operationId": "453c2db0a909455ff1a629a0ed80f9a8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "example": "confirmed"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status ažuriran"
+                    },
+                    "403": {
+                        "description": "Nemate dozvolu"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Rezervacije"
+                ],
+                "summary": "Brisanje rezervacije",
+                "operationId": "3f3a1d6e7ffee88b7ef58128a7f9295c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rezervacija obrisana"
+                    },
+                    "404": {
+                        "description": "Nije pronađena"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reservations/{id}/cancel": {
+            "put": {
+                "tags": [
+                    "Rezervacije"
+                ],
+                "summary": "Otkazivanje rezervacije",
+                "operationId": "69570aef721eb139fc2176bf30ff90f3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rezervacija otkazana"
+                    },
+                    "404": {
+                        "description": "Nije pronađena"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/schedules": {
+            "get": {
+                "tags": [
+                    "Rasporedi"
+                ],
+                "summary": "Lista svih rasporeda",
+                "operationId": "f21805e74c0fcc7937d0464ff67212bd",
+                "responses": {
+                    "200": {
+                        "description": "Lista rasporeda"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Rasporedi"
+                ],
+                "summary": "Kreiranje ili ažuriranje rasporeda",
+                "operationId": "ec2ea6666bdb71e07d0fe1bcaf240511",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "day_of_week",
+                                    "start_time",
+                                    "end_time"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "day_of_week": {
+                                        "type": "string",
+                                        "example": "Monday"
+                                    },
+                                    "start_time": {
+                                        "type": "string",
+                                        "example": "09:00"
+                                    },
+                                    "end_time": {
+                                        "type": "string",
+                                        "example": "17:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Raspored ažuriran"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/schedules/{id}": {
+            "put": {
+                "tags": [
+                    "Rasporedi"
+                ],
+                "summary": "Ažuriranje rasporeda",
+                "operationId": "a1aa67236cf075c90a0e5feee2e76629",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "start_time": {
+                                        "type": "string",
+                                        "example": "09:00"
+                                    },
+                                    "end_time": {
+                                        "type": "string",
+                                        "example": "17:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Raspored ažuriran"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Rasporedi"
+                ],
+                "summary": "Brisanje rasporeda",
+                "operationId": "7e08cf8a05dcade2a47627cf994d9021",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Raspored obrisan"
+                    },
+                    "404": {
+                        "description": "Nije pronađen"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/my-schedule": {
+            "get": {
+                "tags": [
+                    "Rasporedi"
+                ],
+                "summary": "Moj raspored",
+                "operationId": "f11a2e31d77322f0a368c9605306b1bc",
+                "responses": {
+                    "200": {
+                        "description": "Raspored trenutnog frizera"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/services": {
+            "get": {
+                "tags": [
+                    "Usluge"
+                ],
+                "summary": "Lista svih usluga",
+                "operationId": "97de511018def32ca0ccbc800756c538",
+                "responses": {
+                    "200": {
+                        "description": "Lista usluga"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Usluge"
+                ],
+                "summary": "Kreiranje nove usluge",
+                "operationId": "0634f2b3ac65bd2815f4b6459f0db97c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "price",
+                                    "duration_minutes",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Šišanje"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Osnovno šišanje"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": 1500
+                                    },
+                                    "duration_minutes": {
+                                        "type": "integer",
+                                        "example": 30
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usluga kreirana"
+                    },
+                    "422": {
+                        "description": "Greška validacije"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/services/{id}": {
+            "get": {
+                "tags": [
+                    "Usluge"
+                ],
+                "summary": "Detalji usluge",
+                "operationId": "dce5b306a141bdec91eff8a15534d7d7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalji usluge"
+                    },
+                    "404": {
+                        "description": "Usluga nije pronađena"
+                    }
+                }
+            }
+        },
+        "/api/services/{service}": {
+            "put": {
+                "tags": [
+                    "Usluge"
+                ],
+                "summary": "Ažuriranje usluge",
+                "operationId": "3a9545bd0acf658bb3b26cbc87029665",
+                "parameters": [
+                    {
+                        "name": "service",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Šišanje"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": 1800
+                                    },
+                                    "duration_minutes": {
+                                        "type": "integer",
+                                        "example": 45
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usluga ažurirana"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Usluge"
+                ],
+                "summary": "Brisanje usluge",
+                "operationId": "a700b2ae0c8b0e6ccf4812c2bba02e97",
+                "parameters": [
+                    {
+                        "name": "service",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Usluga obrisana"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Kategorije"
+                ],
+                "summary": "Lista svih kategorija",
+                "operationId": "3f5817a34833d0a1f4af4548dd3aeaba",
+                "responses": {
+                    "200": {
+                        "description": "Lista kategorija"
+                    }
+                }
+            }
+        },
+        "/api/clients": {
+            "get": {
+                "tags": [
+                    "Korisnici"
+                ],
+                "summary": "Lista svih klijenata",
+                "operationId": "d515553a72daec88667027f5fb84b5e5",
+                "responses": {
+                    "200": {
+                        "description": "Lista klijenata"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/hairdressers": {
+            "get": {
+                "tags": [
+                    "Korisnici"
+                ],
+                "summary": "Lista svih frizera",
+                "operationId": "7457ac82385e27a61cec758a243a30a0",
+                "responses": {
+                    "200": {
+                        "description": "Lista frizera"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Korisnici"
+                ],
+                "summary": "Kreiranje novog frizera",
+                "operationId": "0c4244964d8805fce4f9443a542ce82b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "first_name",
+                                    "last_name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Ana"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Jovic"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "ana@salon.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "0601234567"
+                                    },
+                                    "specialization": {
+                                        "type": "string",
+                                        "example": "Bojenje"
+                                    },
+                                    "bio": {
+                                        "type": "string",
+                                        "example": "10 godina iskustva"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Frizer kreiran"
+                    },
+                    "422": {
+                        "description": "Greška validacije"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{id}": {
+            "put": {
+                "tags": [
+                    "Korisnici"
+                ],
+                "summary": "Ažuriranje korisnika",
+                "operationId": "b9091397c8b25f12c6adb74be6ce3a5a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "first_name",
+                                    "last_name",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Ana"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Jovic"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "ana@salon.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "0601234567"
+                                    },
+                                    "specialization": {
+                                        "type": "string",
+                                        "example": "Bojenje"
+                                    },
+                                    "bio": {
+                                        "type": "string",
+                                        "example": "10 godina iskustva"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Korisnik ažuriran"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Korisnici"
+                ],
+                "summary": "Brisanje korisnika",
+                "operationId": "fa56cffde745d3f152f95cbacd936c0b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Korisnik obrisan"
+                    },
+                    "404": {
+                        "description": "Nije pronađen"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Rezervacije",
+            "description": "Rezervacije"
+        },
+        {
+            "name": "Rasporedi",
+            "description": "Rasporedi"
+        },
+        {
+            "name": "Usluge",
+            "description": "Usluge"
+        },
+        {
+            "name": "Kategorije",
+            "description": "Kategorije"
+        },
+        {
+            "name": "Korisnici",
+            "description": "Korisnici"
+        }
+    ]
+}
