@@ -19,7 +19,7 @@ function Login() {
         password: password,
       });
 
-      console.log("Šta je stiglo sa servera:", response.data);
+      console.log("Stiglo sa servera:", response.data);
 
       const token = response.data.access_token;
       const user = response.data.user;

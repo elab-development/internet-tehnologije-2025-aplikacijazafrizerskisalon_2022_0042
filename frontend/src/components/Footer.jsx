@@ -54,13 +54,13 @@ function Footer() {
           </h4>
           <ul className="text-xs space-y-2 opacity-80 uppercase tracking-widest font-light">
             <li className="flex justify-between w-full gap-8">
-              <span>Pon - Pet:</span> <span>09:00 - 20:00</span>
+              <span>Pon - Pet:</span> <span>08:00 - 16:00</span>
             </li>
             <li className="flex justify-between w-full gap-8">
-              <span>Subota:</span> <span>09:00 - 16:00</span>
+              <span>Subota:</span> <span>08:00 - 16:00</span>
             </li>
-            <li className="flex justify-between w-full gap-8 text-red-300">
-              <span>Nedelja:</span> <span>Zatvoreno</span>
+            <li className="flex justify-between w-full gap-8 ">
+              <span>Nedelja:</span> <span>08:00 - 16:00</span>
             </li>
           </ul>
         </div>

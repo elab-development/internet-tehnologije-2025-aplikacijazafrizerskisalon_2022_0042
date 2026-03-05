@@ -1,0 +1,53 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Pokreni testove
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Preuzmi kod
+        uses: actions/checkout@v3
+
+      - name: Postavi PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo, pdo_mysql, mbstring, bcmath
+
+      - name: Instaliraj dependencies
+        working-directory: ./salon-api
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Kopiraj .env
+        working-directory: ./salon-api
+        run: cp .env.example .env
+
+      - name: Generiši app key
+        working-directory: ./salon-api
+        run: php artisan key:generate
+
+      - name: Pokreni testove
+        working-directory: ./salon-api
+        run: php artisan test
+
+  docker:
+    name: Napravi Docker image
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Preuzmi kod
+        uses: actions/checkout@v3
+
+      - name: Postavi Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Napravi Docker image
+        run: docker compose build

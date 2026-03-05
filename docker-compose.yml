@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - salon-network
+
+  backend:
+    build: ./salon-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./salon-api/.env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - salon-network
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: salon
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - salon-network
+
+volumes:
+  db_data:
+
+networks:
+  salon-network:
+    driver: bridge

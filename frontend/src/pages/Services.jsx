@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../axios";
 import { useEffect, useState } from "react";
 
 function Services() {
@@ -6,8 +6,8 @@ function Services() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/services")
+    api
+      .get("/services")
       .then((response) => {
         setServices(response.data.data);
         setLoading(false);
