@@ -20,6 +20,7 @@ import MyReservations from "./pages/MyReservations";
 import AdminReservations from "./pages/AdminReservations";
 import HairdresserDashboard from "./pages/HairdresserDashboard";
 import AdminClients from "./pages/AdminClients";
+import AdminStats from "./pages/AdminStats";
 
 function AppContent() {
   const location = useLocation();
@@ -49,7 +50,7 @@ function AppContent() {
         <Route
           path="/admin"
           element={
-            token && (userRole === "admin") ? (
+            token && userRole === "admin" ? (
               <AdminDashboard />
             ) : (
               <Navigate to="/login" />
@@ -59,7 +60,7 @@ function AppContent() {
         <Route
           path="/admin/reservations"
           element={
-            token && (userRole === "admin" ) ? (
+            token && userRole === "admin" ? (
               <AdminReservations />
             ) : (
               <Navigate to="/login" />
@@ -69,7 +70,7 @@ function AppContent() {
         <Route
           path="/admin/hairdressers"
           element={
-            token && (userRole === "admin") ? (
+            token && userRole === "admin" ? (
               <AdminHairdressers />
             ) : (
               <Navigate to="/login" />
@@ -79,35 +80,44 @@ function AppContent() {
         <Route
           path="/admin/schedules"
           element={
-            token && (userRole === "admin") ? (
+            token && userRole === "admin" ? (
               <AdminSchedules />
             ) : (
               <Navigate to="/login" />
             )
           }
         />
-         <Route
+        <Route
           path="/admin/clients"
           element={
-            token && (userRole === "admin") ? (
+            token && userRole === "admin" ? (
               <AdminClients />
             ) : (
               <Navigate to="/login" />
             )
           }
         />
-         <Route
-        path="/hairdresser/schedule"
-        element={
-          token && userRole === "hairdresser" ? (
-            <HairdresserDashboard />
-          ) : (
-            <Navigate to="/login" />
-          )
-        }
-      />
+        <Route
+          path="/hairdresser/schedule"
+          element={
+            token && userRole === "hairdresser" ? (
+              <HairdresserDashboard />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/admin/stats"
+          element={
+            token && userRole === "admin" ? (
+              <AdminStats />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
       </Routes>
-     
 
       {!isLoginPage &&
         !isAdminPage &&
