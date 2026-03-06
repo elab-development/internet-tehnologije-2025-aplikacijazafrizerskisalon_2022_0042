@@ -3,9 +3,16 @@ FROM php:8.2-fpm-alpine
 WORKDIR /var/www
 
 RUN apk add --no-cache \
-    bash curl unzip git \
-    libpng-dev libjpeg-turbo-dev freetype-dev \
-    oniguruma-dev libxml2-dev \
+    bash \
+    curl \
+    unzip \
+    git \
+    postgresql-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    oniguruma-dev \
+    libxml2-dev \
     && docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
