@@ -54,3 +54,15 @@ Moderna web aplikacija za upravljanje frizerskim salonom. Sistem omogućava klij
 ### Frontend (React)
 1. Intsaliraj pakete: `npm install`
 2. Pokreni aplikaciju: `npm run dev`
+
+## Pokretanje pomoću Dockera
+
+### Preduslovi
+- Docker Desktop instaliran i pokrenut
+
+### Pokretanje
+```bash
+docker-compose up --build
+```
+
+Nakon pokretanja aplikacija je dostupna na `http://localhost`.

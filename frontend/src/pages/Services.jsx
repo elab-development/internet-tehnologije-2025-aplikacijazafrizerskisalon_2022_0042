@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 function Services() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [eurRate, setEurRate] = useState(null);
 
   useEffect(() => {
     api
@@ -16,6 +17,11 @@ function Services() {
         console.error("Greška pri učitavanju:", error);
         setLoading(false);
       });
+
+    fetch("https://api.exchangerate-api.com/v4/latest/RSD")
+      .then((res) => res.json())
+      .then((data) => setEurRate(data.rates.EUR))
+      .catch((err) => console.error("Greška pri učitavanju kursa:", err));
   }, []);
 
   const groupedServices = services.reduce((acc, service) => {
@@ -64,6 +70,11 @@ function Services() {
                         <span className="block font-montserrat font-bold text-[#705B46] text-sm">
                           {s.price} RSD
                         </span>
+                        {eurRate && (
+                          <span className="block text-[9px] opacity-50 uppercase tracking-tighter">
+                            ≈ {(s.price * eurRate).toFixed(2)} EUR
+                          </span>
+                        )}
                         <span className="block text-[9px] opacity-50 uppercase tracking-tighter">
                           {s.duration_minutes} min
                         </span>
